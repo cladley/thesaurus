@@ -1,5 +1,5 @@
 const vscode = require('vscode');
-const thesaurus = require('./thesaurus-fetcher');
+const getWordsFor = require('./thesaurus-fetcher');
 
 class Thesaurus {
 
@@ -8,7 +8,7 @@ class Thesaurus {
     if (!editor) return;
 
     this.currentSelectedText = editor.document.getText(editor.selection);
-    return this.currentSelectedText > 0 ? true : false;
+    return this.currentSelectedText.length > 0 ? true : false;
   }
 
   getResults() {
@@ -17,17 +17,20 @@ class Thesaurus {
     const startPos = new vscode.Position(start.line, start.character);
     const endPos = new vscode.Position(end.line, end.character);
 
-    thesaurus(this._currentSelectedText)
+    getWordsFor(this.currentSelectedText)
         .then(results => {
           const words = results;
+          console.log(words);
 
-          vscode.window.showQuickPick(words)
-            .then(word => {
-              if (word) {
-                const edit = this.createEdit(editor.document, editor.selection, word);
-                vscode.workspace.applyEdit(edit);
-              }
-            });
+          if (words.length > 0) {
+            vscode.window.showQuickPick(words)
+              .then(word => {
+                if (word) {
+                  const edit = this.createEdit(editor.document, editor.selection, word);
+                  vscode.workspace.applyEdit(edit);
+                }
+              });
+          }
         })
         .catch(error => {
 

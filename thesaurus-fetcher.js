@@ -7,6 +7,7 @@ const WORD_ROW_SELECTOR = 'tr.theentry';
 const WORD_SELECTOR = 'td.abbdef a';
 
 function getWordsFor(word) {
+
   const thesaurusUrl = url.resolve(THESAURUS_URL, word);
 
   return new Promise((res, rej) => {
