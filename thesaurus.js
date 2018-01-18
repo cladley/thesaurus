@@ -1,10 +1,12 @@
-const vscode = require('vscode');
 const getWordsFor = require('./thesaurus-fetcher');
 
 class Thesaurus {
+  constructor(vsCode) {
+    this.vsCode = vsCode;
+  }
 
   hasTextSelected() {
-    let editor = vscode.window.activeTextEditor;
+    let editor = this.vsCode.window.activeTextEditor;
     if (!editor) return;
 
     this.currentSelectedText = editor.document.getText(editor.selection);
@@ -12,10 +14,10 @@ class Thesaurus {
   }
 
   getResults() {
-    let editor = vscode.window.activeTextEditor;
+    let editor = this.vsCode.window.activeTextEditor;
     const {start, end} = editor.selection;
-    const startPos = new vscode.Position(start.line, start.character);
-    const endPos = new vscode.Position(end.line, end.character);
+    const startPos = new this.vsCode.Position(start.line, start.character);
+    const endPos = new this.vsCode.Position(end.line, end.character);
 
     getWordsFor(this.currentSelectedText)
         .then(results => {
@@ -23,11 +25,11 @@ class Thesaurus {
           console.log(words);
 
           if (words.length > 0) {
-            vscode.window.showQuickPick(words)
+            this.vsCode.window.showQuickPick(words)
               .then(word => {
                 if (word) {
                   const edit = this.createEdit(editor.document, editor.selection, word);
-                  vscode.workspace.applyEdit(edit);
+                  this.vsCode.workspace.applyEdit(edit);
                 }
               });
           }
@@ -42,14 +44,14 @@ class Thesaurus {
   }
 
   createTextEdit(coords, content) {
-    const start = new vscode.Position(coords.start.line, coords.start.character);
-    const end = new vscode.Position(coords.end.line, coords.end.character);
-    const range = new vscode.Range(start, end);
-    return new vscode.TextEdit(range, content);
+    const start = new this.vsCode.Position(coords.start.line, coords.start.character);
+    const end = new this.vsCode.Position(coords.end.line, coords.end.character);
+    const range = new this.vsCode.Range(start, end);
+    return new this.vsCode.TextEdit(range, content);
   }
 
   setEditFactory(uri, coords, content) {
-    const workspaceEdit = new vscode.WorkspaceEdit();
+    const workspaceEdit = new this.vsCode.WorkspaceEdit();
     var edit = this.createTextEdit(coords, content);
 
     workspaceEdit.set(uri, [edit]);
