@@ -19,24 +19,13 @@ class Thesaurus {
     const startPos = new this.vsCode.Position(start.line, start.character);
     const endPos = new this.vsCode.Position(end.line, end.character);
 
-    getWordsFor(this.currentSelectedText)
-        .then(results => {
-          const words = results;
-          console.log(words);
-
-          if (words.length > 0) {
-            this.vsCode.window.showQuickPick(words)
-              .then(word => {
-                if (word) {
-                  const edit = this.createEdit(editor.document, editor.selection, word);
-                  this.vsCode.workspace.applyEdit(edit);
-                }
-              });
-          }
-        })
-        .catch(error => {
-
-        });
+    this.vsCode.window.showQuickPick(getWordsFor(this.currentSelectedText))
+      .then(word => {
+        if (word) {
+          const edit = this.createEdit(editor.document, editor.selection, word);
+          this.vsCode.workspace.applyEdit(edit);
+        }
+      });
   }
 
   createEdit(document, selection, word) {

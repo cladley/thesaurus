@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
-    "node-fetch": "^1.7.3"
+    "node-fetch": "^1.7.3",
+    "random-fake-useragent": "^0.1.0"
   }
 }
