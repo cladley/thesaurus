@@ -1,5 +1,4 @@
 const fetch = require('node-fetch');
-const url = require('url');
 const cheerio = require('cheerio')
 const randomAgent = require('random-fake-useragent');
 
@@ -26,11 +25,11 @@ function getWordsFor(word) {
       const words = page(WORD_ROW_SELECTOR).map((index, element) => {
         return page(element).find(WORD_SELECTOR).first().text()
       }).get();
-      
+
       res(words);
     })
     .catch(error => {
-      rej(`An error occured fetching results for ${word}`);
+      rej(`An error occurred fetching results for ${word}`);
     });
   });
 }
